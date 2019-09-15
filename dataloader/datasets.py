@@ -111,7 +111,7 @@ class CASIA1Dataset(TxtDataset):
 
 	def _get_labels(self):
 		self.labels = [
-			int(os.path.basename(file).split('_')[0])-1
+			int(os.path.basename(file).split('_')[0]) - 1
 			for file in self.image_files
 		]
 
@@ -139,6 +139,7 @@ class CASIA4IntervalDataset(TxtDataset):
 
 	def _get_labels(self):
 		self.labels = [
-			int(file.split('/')[-3])-1
+			int(os.path.basename(file)[2:5]) - 1
 			for file in self.image_files
 		]
+		print(max(self.labels))
