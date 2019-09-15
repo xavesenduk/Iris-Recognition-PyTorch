@@ -26,16 +26,9 @@ workon iris
 
 * Clone git and install required packages:
 ```
-git clone --recursive https://github.com/thuyngch/Iris-Recognition-PyTorch.git
 cd Iris-Recognition-PyTorch
-git submodule sync
-git submodule update --init --recursive
 pip install -r requirements.txt
-```
-
-* In this repository, I adapt off-the-shelf models from [pytorch-image-models](https://github.com/rwightman/pytorch-image-models), to install it:
-```
-pip install -e models/pytorch-image-models
+pip install git+https://github.com/thuyngch/pytorch-image-models##egg=timm
 ```
 
 
