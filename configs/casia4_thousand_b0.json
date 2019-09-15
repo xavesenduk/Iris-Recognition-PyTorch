@@ -65,7 +65,7 @@
     "lr_scheduler": {
         "type": "CosineAnnealingWarmRestarts",
 		"by_epoch": false,
-        "args": {"T_0": 150, "eta_min": 5e-5, "last_epoch": -1}
+        "args": {"T_0": 4700, "eta_min": 5e-5, "last_epoch": -1}
     },
 
 	"trainer": {
