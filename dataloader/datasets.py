@@ -139,6 +139,6 @@ class CASIA4IntervalDataset(TxtDataset):
 
 	def _get_labels(self):
 		self.labels = [
-			int(os.path.basename(file)[2:5])
+			int(os.path.basename(file)[2:5])-1
 			for file in self.image_files
 		]
