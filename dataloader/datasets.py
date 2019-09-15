@@ -142,4 +142,3 @@ class CASIA4IntervalDataset(TxtDataset):
 			int(os.path.basename(file)[2:5]) - 1
 			for file in self.image_files
 		]
-		print(max(self.labels))

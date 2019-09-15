@@ -15,7 +15,7 @@
 
 	"train_loader": {
 		"dataset": {
-			"type": "CASIA4ThousandDataset",
+			"type": "CASIA4IntervalDataset",
 			"args": {
 				"txtfile": "data/casia4_interval_train.txt",
 				"num_classes": 100, "use_sigmoid": false, "color_channel": "RGB",
@@ -33,7 +33,7 @@
 
 	"valid_loader": {
 		"dataset": {
-			"type": "CASIA4ThousandDataset",
+			"type": "CASIA4IntervalDataset",
 			"args": {
 				"txtfile": "data/casia4_interval_valid.txt",
 				"num_classes": 100, "use_sigmoid": false, "color_channel": "RGB",
