@@ -114,3 +114,17 @@ class CASIA1Dataset(TxtDataset):
 			int(os.path.basename(file).split('_')[0])-1
 			for file in self.image_files
 		]
+
+
+#------------------------------------------------------------------------------
+#  CASIA4ThousandDataset
+#------------------------------------------------------------------------------
+class CASIA4ThousandDataset(TxtDataset):
+	def __init__(self, **kargs):
+		super(CASIA4ThousandDataset, self).__init__(**kargs)
+
+	def _get_labels(self):
+		self.labels = [
+			int(os.path.basename(file)[2:5])
+			for file in self.image_files
+		]
