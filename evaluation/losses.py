@@ -17,6 +17,6 @@ def ce_loss(logits, targets, loss_weight=1.0, **kargs):
 	logits: (torch.float32)  shape (N, C)
 	targets: (torch.int64) shape (N,), value {0,1,...,C-1}
 	"""
-	print(targets)
+	print(targets, targets.min(), targets.max())
 	loss = F.cross_entropy(logits, targets)
 	return loss * loss_weight
