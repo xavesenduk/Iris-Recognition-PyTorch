@@ -110,3 +110,4 @@ TODO*
 .gitmessage.txt
 .mycommitmsg.txt
 setup.sh
+test_cv.py

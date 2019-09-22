@@ -75,3 +75,44 @@ class BaseDataset(Dataset):
 
 	def filter_files(self, image_files):
 		return [file for file in image_files if os.path.splitext(file)[1] in self._FORMAT]
+
+
+	def split_kfolds(self, image_files, labels, kfolds=1):
+		# Initialize dict of unique_labels
+		unique_labels, label_counts = np.unique(labels, return_counts=True)
+		label_dict = dict()
+		for label, count in zip(unique_labels, label_counts):
+			label_dict[label] = {
+				'sample_ind': [],
+				'samplers_per_fold': int(count / kfolds),
+			}
+
+		# Collect label_dict
+		for sample_idx, label in enumerate(labels):
+			label_dict[label]['sample_ind'].append(sample_idx)
+
+		# Build folds
+		folds = []
+		for fold_idx in range(kfolds):
+			fold = []
+
+			for label in unique_labels:
+				label_ind = label_dict[label]['sample_ind']
+				samplers_per_fold = label_dict[label]['samplers_per_fold']
+
+				start_idx = fold_idx * samplers_per_fold
+				if fold_idx != kfolds-1:
+					end_idx = (fold_idx+1) * samplers_per_fold
+				else:
+					end_idx = len(label_ind)
+
+				fold += [label_ind[i] for i in range(start_idx, end_idx)]
+
+			folds.append(fold)
+
+		# Verify and return
+		del label_dict
+		len_folds = sum(len(fold) for fold in folds)
+		assert len_folds == len(labels), \
+			"len_folds={}, while len(labels)={}".format(len_folds, len(labels))
+		return folds

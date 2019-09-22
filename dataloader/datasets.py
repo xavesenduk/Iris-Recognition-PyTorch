@@ -15,10 +15,8 @@ from dataloader.augmentation import Augmentation
 #------------------------------------------------------------------------------
 class TxtDataset(BaseDataset):
 
-	_FORMAT = ('.jpg', '.png', '.bmp')
-
-	def __init__(self, txtfile, num_classes, use_sigmoid=True, color_channel="RGB",
-		input_size=(512,512), normalize=True, one_hot=False, is_training=True, 
+	def __init__(self, txtfile, num_classes, kfolds=1, use_sigmoid=True, color_channel="RGB",
+		input_size=(256, 256), normalize=True, one_hot=False, is_training=True,
 		rot90=0.3, flip_hor=0.5, flip_ver=0.5, brightness=0.2, contrast=0.1, shift=0.1625, scale=0.6, rotate=10,
 		img_loader_mode='pillow', normalize_mode='imagenet'):
 
@@ -34,6 +32,12 @@ class TxtDataset(BaseDataset):
 		# Get image files
 		self._get_image_files(txtfile)
 		self._get_labels()
+
+		# K-fold cross validation
+		self.folds = self.split_kfolds(self.image_files, self.labels, kfolds)
+		print("[{}] Split into {} cross-validation folds: {}".format(
+			self.__class__.__name__, kfolds, [len(fold) for fold in self.folds]
+		))
 
 		# Parameters
 		self.use_sigmoid = use_sigmoid
@@ -82,6 +86,7 @@ class TxtDataset(BaseDataset):
 
 	def _get_labels(self):
 		self.labels = []
+		raise NotImplementedError
 
 	def _augment_data(self, image):
 		image = self.augmentor(image)
