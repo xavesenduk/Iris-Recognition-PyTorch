@@ -18,7 +18,7 @@
 			"type": "MMU2Dataset",
 			"args": {
 				"txtfile": "data/mmu2_train.txt",
-				"num_classes": 100, "use_sigmoid": false, "color_channel": "RGB",
+				"num_classes": 100, "kfolds": 6, "use_sigmoid": false, "color_channel": "RGB",
 				"input_size": [256, 256], "normalize": true, "one_hot": false,
 				"rot90": 0.5, "flip_hor": 0.5, "flip_ver": 0.5, "brightness": 0.3, "contrast": 0.2, "shift": 0.2, "scale": 0.6, "rotate": 30,
 				"is_training": true, "img_loader_mode": "pillow", "normalize_mode": "imagenet"

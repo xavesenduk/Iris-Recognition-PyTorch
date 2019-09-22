@@ -37,8 +37,6 @@ class ClassificationTrainer(BaseTrainer):
 	def _get_progress_bar_dict(self, losses, loss, metrics):
 		pbar_dict = dict()
 		pbar_dict['lr'] = self.optimizer.param_groups[0]['lr']
-		# for key, val in losses.items():
-		# 	pbar_dict[key] = val.item()
 		pbar_dict['loss'] = loss
 		if self.verbosity>=3:
 			for i, metric in enumerate(self.metrics):

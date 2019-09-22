@@ -34,10 +34,12 @@ class TxtDataset(BaseDataset):
 		self._get_labels()
 
 		# K-fold cross validation
-		self.folds = self.split_kfolds(self.image_files, self.labels, kfolds)
-		print("[{}] Split into {} cross-validation folds: {}".format(
-			self.__class__.__name__, kfolds, [len(fold) for fold in self.folds]
-		))
+		self.kfolds = kfolds
+		if kfolds!=1:
+			self.folds = self.split_kfolds(self.image_files, self.labels, kfolds)
+			print("[{}] Split into {} cross-validation folds: {}".format(
+				self.__class__.__name__, kfolds, [len(fold) for fold in self.folds]
+			))
 
 		# Parameters
 		self.use_sigmoid = use_sigmoid
@@ -49,7 +51,13 @@ class TxtDataset(BaseDataset):
 		self.one_hot = one_hot
 
 	def __len__(self):
-		return len(self.image_files)
+		if self.kfolds==1:
+			return len(self.image_files)
+		else:
+			if not hasattr(self, 'fold_image_files'):
+				raise ValueError("Please call `set_fold` function before creating dataloader")
+			else:
+				return len(self.fold_image_files)
 
 	def __getitem__(self, idx):
 		# Read image and label
@@ -76,6 +84,15 @@ class TxtDataset(BaseDataset):
 			"targets": torch.from_numpy(label.astype(np.int64)),
 		}
 		return data
+
+	def set_fold(self, fold_idx):
+		assert 0 <= fold_idx < self.kfolds
+		fold = self.folds[fold_idx]
+		self.fold_image_files = [self.image_files[idx] for idx in fold]
+		self.fold_labels = [self.labels[idx] for idx in fold]
+		print("[%s] Set fold-%d with %d samples" % (
+			self.__class__.__name__, fold_idx, len(self.fold_image_files)
+		))
 
 	def _get_image_files(self, txtfile):
 		fp = open(txtfile, 'r')

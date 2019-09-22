@@ -32,7 +32,7 @@ def main(config, resume):
 
 	# Build model
 	model = get_instance(module_arch, 'arch', config)
-	img_sz = config["train_loader"]['dataset']["args"]["input_size"]
+	img_sz = config["data_loader"]['dataset']["args"]["input_size"]
 	model.summary(input_shape=(3, *img_sz))
 	if config["arch"]["pretrained"] is not None:
 		pretrained = torch.load(config["arch"]["pretrained"], map_location='cpu')
@@ -40,29 +40,17 @@ def main(config, resume):
 		print("All parameters are initialized from %s" % (config["arch"]["pretrained"]))
 
 	# Build dataloader
-	train_dataset = get_instance(module_data, 'dataset', config['train_loader'])
-	collate_fn = getattr(module_data, config['train_loader']['collate'])
-	train_loader = DataLoader(
-		dataset=train_dataset,
-		batch_size=config['train_loader']['batch_size'],
-		shuffle=config['train_loader']['shuffle'],
-		num_workers=config['train_loader']['num_workers'],
-		pin_memory=config['train_loader']['pin_memory'],
+	dataset = get_instance(module_data, 'dataset', config['data_loader'])
+	collate_fn = getattr(module_data, config['data_loader']['collate'])
+	data_loader = DataLoader(
+		dataset=dataset,
+		batch_size=config['data_loader']['batch_size'],
+		shuffle=config['data_loader']['shuffle'],
+		num_workers=config['data_loader']['num_workers'],
+		pin_memory=config['data_loader']['pin_memory'],
 		drop_last=False,
 		collate_fn=collate_fn,
 	)
-	valid_loader = None
-	if config.get('valid_loader', None) is not None:
-		valid_dataset = get_instance(module_data, 'dataset', config['valid_loader'])
-		collate_fn = getattr(module_data, config['valid_loader']['collate'])
-		valid_loader = DataLoader(
-			dataset=valid_dataset,
-			batch_size=config['valid_loader']['batch_size'],
-			shuffle=config['valid_loader']['shuffle'],
-			num_workers=config['valid_loader']['num_workers'],
-			pin_memory=config['valid_loader']['pin_memory'],
-			collate_fn=collate_fn,
-		)
 
 	# Build loss and metrics
 	losses = [
@@ -89,8 +77,7 @@ def main(config, resume):
 		optimizer=optimizer, 
 		resume=resume,
 		config=config,
-		data_loader=train_loader,
-		valid_data_loader=valid_loader,
+		data_loader=data_loader,
 		lr_scheduler=lr_scheduler,
 		grad_clip=grad_clip,
 	)
